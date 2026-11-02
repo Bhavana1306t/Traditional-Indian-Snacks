@@ -271,6 +271,19 @@ export const OrderBookingModal: React.FC<OrderBookingModalProps> = ({
         ) : (
           /* ORDER FORM */
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Back to Home – inside order form */}
+            <div className="flex items-center justify-between pb-2 border-b border-[#C69A45]/20">
+              <button
+                type="button"
+                onClick={() => { onClose(); navigate('/'); }}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#7B211F] hover:bg-[#5A1715] text-[#FFF3DD] text-xs font-bold shadow hover:scale-105 transition-all duration-200"
+              >
+                <Home className="w-3.5 h-3.5 text-[#FFE082]" />
+                <span>← Back to Home</span>
+              </button>
+              <span className="text-[10px] text-[#553322]/60 font-serif italic">Secure Order Form</span>
+            </div>
+
             {/* Header */}
             <div className="text-center mb-4">
               <div className="inline-flex p-2.5 rounded-full bg-[#7B211F]/10 border border-[#C69A45]/40 mb-2">
