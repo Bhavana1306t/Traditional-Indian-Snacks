@@ -74,9 +74,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAuthModal, onOpenOrderModa
       </div>
 
       {/* Main Navbar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
         <div className="flex items-center justify-between h-20">
-          {/* LEFT: Heading / Logo / Brand Title */}
+          {/* LEFT: Heading / Logo / Brand Title on Far Left */}
           <div className="flex-shrink-0">
             <Link to="/" className="flex items-center gap-3 group transition-transform duration-300">
               <div className="p-2.5 rounded-2xl bg-gradient-to-br from-[#7B211F] to-[#5A1715] border border-[#C69A45]/60 shadow-md group-hover:scale-110 group-hover:rotate-6 group-hover:shadow-[#C69A45]/30 group-hover:shadow-lg transition-all duration-300">
@@ -93,17 +93,17 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAuthModal, onOpenOrderModa
             </Link>
           </div>
 
-          {/* MIDDLE: Nav Links (Home, About Us, Our Poornalu, Contact, My Orders) with Proper Spacing & Hover Animations */}
-          <nav className="hidden md:flex flex-1 items-center justify-center gap-8 lg:gap-11 xl:gap-14 mx-4">
+          {/* MIDDLE: Nav Links (Home, About Us, Our Poornalu, Contact, My Orders) with small words, centered and properly spaced */}
+          <nav className="hidden md:flex flex-1 items-center justify-center gap-5 lg:gap-8 xl:gap-10 mx-4">
             {navLinks.map((link) => (
               <NavLink
                 key={link.to}
                 to={link.to}
                 className={({ isActive }) =>
-                  `relative px-3.5 py-1.5 rounded-full font-serif text-sm font-semibold tracking-wider transition-all duration-300 transform hover:-translate-y-0.5 group/nav ${
+                  `relative px-3.5 py-1.5 rounded-full font-sans text-xs sm:text-[13px] font-medium tracking-normal whitespace-nowrap transition-all duration-300 transform hover:-translate-y-0.5 group/nav ${
                     isActive
-                      ? 'text-[#7B211F] font-bold bg-[#F8E7CB]/80 shadow-sm'
-                      : 'text-[#553322] hover:text-[#7B211F] hover:bg-[#F8E7CB]/50'
+                      ? 'text-[#7B211F] font-bold bg-[#F8E7CB]/90 shadow-sm'
+                      : 'text-[#553322] hover:text-[#7B211F] hover:bg-[#F8E7CB]/60'
                   }`
                 }
               >
@@ -114,10 +114,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAuthModal, onOpenOrderModa
                     </span>
                     {/* Animated Gold Bottom Underline Expanding on Hover */}
                     <span
-                      className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-[2.5px] bg-gradient-to-r from-[#C69A45] via-[#7B211F] to-[#C69A45] rounded-full transition-all duration-300 ${
+                      className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] bg-gradient-to-r from-[#C69A45] via-[#7B211F] to-[#C69A45] rounded-full transition-all duration-300 ${
                         isActive
-                          ? 'w-4/5 opacity-100'
-                          : 'w-0 opacity-0 group-hover/nav:w-4/5 group-hover/nav:opacity-100'
+                          ? 'w-3/4 opacity-100'
+                          : 'w-0 opacity-0 group-hover/nav:w-3/4 group-hover/nav:opacity-100'
                       }`}
                     />
                   </>
@@ -129,24 +129,24 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAuthModal, onOpenOrderModa
               <NavLink
                 to="/customer/dashboard"
                 className={({ isActive }) =>
-                  `relative px-3.5 py-1.5 rounded-full font-serif text-sm font-semibold tracking-wider transition-all duration-300 transform hover:-translate-y-0.5 group/nav flex items-center gap-1.5 ${
+                  `relative px-3.5 py-1.5 rounded-full font-sans text-xs sm:text-[13px] font-medium tracking-normal whitespace-nowrap transition-all duration-300 transform hover:-translate-y-0.5 group/nav flex items-center gap-1.5 ${
                     isActive
-                      ? 'text-[#7B211F] font-bold bg-[#F8E7CB]/80 shadow-sm'
-                      : 'text-[#553322] hover:text-[#7B211F] hover:bg-[#F8E7CB]/50'
+                      ? 'text-[#7B211F] font-bold bg-[#F8E7CB]/90 shadow-sm'
+                      : 'text-[#553322] hover:text-[#7B211F] hover:bg-[#F8E7CB]/60'
                   }`
                 }
               >
                 {({ isActive }) => (
                   <>
-                    <ShoppingBag className="w-4 h-4 text-[#C69A45] group-hover/nav:scale-110 transition-transform duration-200" />
+                    <ShoppingBag className="w-3.5 h-3.5 text-[#C69A45] group-hover/nav:scale-110 transition-transform duration-200" />
                     <span className="relative z-10 transition-transform duration-200 group-hover/nav:scale-105 inline-block">
                       My Orders
                     </span>
                     <span
-                      className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-[2.5px] bg-gradient-to-r from-[#C69A45] via-[#7B211F] to-[#C69A45] rounded-full transition-all duration-300 ${
+                      className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] bg-gradient-to-r from-[#C69A45] via-[#7B211F] to-[#C69A45] rounded-full transition-all duration-300 ${
                         isActive
-                          ? 'w-4/5 opacity-100'
-                          : 'w-0 opacity-0 group-hover/nav:w-4/5 group-hover/nav:opacity-100'
+                          ? 'w-3/4 opacity-100'
+                          : 'w-0 opacity-0 group-hover/nav:w-3/4 group-hover/nav:opacity-100'
                       }`}
                     />
                   </>
