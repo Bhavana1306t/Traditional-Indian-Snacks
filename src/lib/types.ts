@@ -85,3 +85,4 @@ export interface DashboardStats {
   cancelledOrders: number;
   totalRevenue: number;
 }
+

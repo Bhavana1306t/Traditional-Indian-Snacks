@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Order, OrderStatusHistory, OrderStatus } from '../../lib/types';
 import { getOrderTimeline } from '../../lib/api';
 import { OrderStatusBadge, PaymentStatusBadge } from '../common/StatusBadge';
 import { DecorativeLotus } from '../common/DecorativeLotus';
-import { Check, Clock, Flame, Store, Truck, CheckCheck, XCircle, AlertCircle, RefreshCw } from 'lucide-react';
+import { Check, Clock, Flame, Store, Truck, CheckCheck, XCircle, AlertCircle, RefreshCw, Home } from 'lucide-react';
 
 interface OrderTimelineProps {
   order: Order;
@@ -104,7 +105,15 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order, onRefresh }
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2.5">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#F8E7CB] hover:bg-[#EDD4AE] text-[#7B211F] text-xs font-serif font-bold border border-[#C69A45]/40 transition shadow-sm hover:scale-105 active:scale-95"
+            title="Return to Public Storefront"
+          >
+            <Home className="w-3.5 h-3.5 text-[#C69A45]" />
+            <span>Back to Home</span>
+          </Link>
           <OrderStatusBadge status={order.order_status} size="md" />
           <PaymentStatusBadge status={order.payment_status} size="sm" />
           {onRefresh && (
@@ -271,3 +280,4 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order, onRefresh }
     </div>
   );
 };
+

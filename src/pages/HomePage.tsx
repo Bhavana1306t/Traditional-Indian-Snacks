@@ -232,3 +232,4 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenOrderModal, onOpenAuth
     </div>
   );
 };
+

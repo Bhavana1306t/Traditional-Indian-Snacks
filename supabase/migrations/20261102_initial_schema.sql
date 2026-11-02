@@ -308,3 +308,4 @@ VALUES (
     '/images/poornalu-brass-plate.jpg'
 )
 ON CONFLICT (id) DO NOTHING;
+

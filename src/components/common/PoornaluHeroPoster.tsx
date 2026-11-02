@@ -135,3 +135,4 @@ export const PoornaluHeroPoster: React.FC<{ onOrderClick?: () => void }> = ({ on
     </div>
   );
 };
+

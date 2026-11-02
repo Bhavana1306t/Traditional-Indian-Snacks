@@ -233,3 +233,4 @@ export const PoornaluVisual: React.FC<PoornaluVisualProps> = ({
     </div>
   );
 };
+

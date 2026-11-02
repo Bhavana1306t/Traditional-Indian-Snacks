@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { Order, OrderStatus } from '../../lib/types';
 import { getOrders } from '../../lib/api';
@@ -22,7 +23,8 @@ import {
   RefreshCw,
   Eye,
   Store,
-  Truck
+  Truck,
+  Home
 } from 'lucide-react';
 
 interface CustomerDashboardProps {
@@ -61,6 +63,22 @@ export const CustomerDashboardPage: React.FC<CustomerDashboardProps> = ({ onOpen
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8 bg-[#FFF3DD] text-[#553322]">
+      {/* Back to Home Page Navigation Bar */}
+      <div className="flex items-center justify-between">
+        <Link
+          to="/"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#F8E7CB] hover:bg-[#EDD4AE] text-[#7B211F] text-xs font-serif font-bold border border-[#C69A45]/50 shadow-sm hover:scale-105 active:scale-95 transition-all duration-200 group/back"
+          title="Return to Public Storefront"
+        >
+          <Home className="w-4 h-4 text-[#C69A45] group-hover/back:-translate-x-0.5 transition-transform" />
+          <span>← Back to Home Page</span>
+        </Link>
+
+        <span className="text-xs text-[#553322]/70 font-serif hidden sm:inline">
+          Traditional Indian Snacks • Customer Dashboard
+        </span>
+      </div>
+
       {/* 1. Welcome Header Banner */}
       <div className="bg-[#7B211F] text-[#FFF3DD] rounded-3xl p-6 sm:p-8 border-2 border-[#C69A45] shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div className="flex items-center gap-4">
@@ -314,3 +332,4 @@ export const CustomerDashboardPage: React.FC<CustomerDashboardProps> = ({ onOpen
     </div>
   );
 };
+

@@ -99,3 +99,4 @@ export const AboutPage: React.FC<{ onOpenOrderModal: () => void }> = ({ onOpenOr
     </div>
   );
 };
+

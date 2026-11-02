@@ -76,36 +76,52 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAuthModal, onOpenOrderModa
       {/* Main Navbar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
-          {/* Logo & Brand Title */}
-          <Link to="/" className="flex items-center gap-3 group">
-            <div className="p-2 rounded-2xl bg-gradient-to-br from-[#7B211F] to-[#5A1715] border border-[#C69A45]/60 shadow-md group-hover:scale-105 transition-transform duration-200">
-              <DecorativeLotus size={28} color="#C69A45" />
-            </div>
-            <div>
-              <span className="text-xl sm:text-2xl font-serif font-black tracking-wide text-[#7B211F] block leading-none">
-                {BUSINESS_CONFIG.name}
-              </span>
-              <span className="text-[10px] sm:text-xs font-serif font-semibold text-[#C69A45] tracking-[0.2em] uppercase block mt-1">
-                {BUSINESS_CONFIG.tagline}
-              </span>
-            </div>
-          </Link>
+          {/* LEFT: Heading / Logo / Brand Title */}
+          <div className="flex-shrink-0">
+            <Link to="/" className="flex items-center gap-3 group transition-transform duration-300">
+              <div className="p-2.5 rounded-2xl bg-gradient-to-br from-[#7B211F] to-[#5A1715] border border-[#C69A45]/60 shadow-md group-hover:scale-110 group-hover:rotate-6 group-hover:shadow-[#C69A45]/30 group-hover:shadow-lg transition-all duration-300">
+                <DecorativeLotus size={28} color="#C69A45" />
+              </div>
+              <div>
+                <span className="text-xl sm:text-2xl font-serif font-black tracking-wide text-[#7B211F] group-hover:text-[#9B302A] block leading-none transition-colors duration-200">
+                  {BUSINESS_CONFIG.name}
+                </span>
+                <span className="text-[10px] sm:text-xs font-serif font-semibold text-[#C69A45] tracking-[0.2em] uppercase block mt-1">
+                  {BUSINESS_CONFIG.tagline}
+                </span>
+              </div>
+            </Link>
+          </div>
 
-          {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center gap-8">
+          {/* MIDDLE: Nav Links (Home, About Us, Our Poornalu, Contact, My Orders) with Proper Spacing & Hover Animations */}
+          <nav className="hidden md:flex flex-1 items-center justify-center gap-8 lg:gap-11 xl:gap-14 mx-4">
             {navLinks.map((link) => (
               <NavLink
                 key={link.to}
                 to={link.to}
                 className={({ isActive }) =>
-                  `font-serif text-sm font-semibold tracking-wider transition-colors relative py-1 hover:text-[#7B211F] ${
+                  `relative px-3.5 py-1.5 rounded-full font-serif text-sm font-semibold tracking-wider transition-all duration-300 transform hover:-translate-y-0.5 group/nav ${
                     isActive
-                      ? 'text-[#7B211F] font-bold after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-[#7B211F]'
-                      : 'text-[#553322]'
+                      ? 'text-[#7B211F] font-bold bg-[#F8E7CB]/80 shadow-sm'
+                      : 'text-[#553322] hover:text-[#7B211F] hover:bg-[#F8E7CB]/50'
                   }`
                 }
               >
-                {link.label}
+                {({ isActive }) => (
+                  <>
+                    <span className="relative z-10 transition-transform duration-200 group-hover/nav:scale-105 inline-block">
+                      {link.label}
+                    </span>
+                    {/* Animated Gold Bottom Underline Expanding on Hover */}
+                    <span
+                      className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-[2.5px] bg-gradient-to-r from-[#C69A45] via-[#7B211F] to-[#C69A45] rounded-full transition-all duration-300 ${
+                        isActive
+                          ? 'w-4/5 opacity-100'
+                          : 'w-0 opacity-0 group-hover/nav:w-4/5 group-hover/nav:opacity-100'
+                      }`}
+                    />
+                  </>
+                )}
               </NavLink>
             ))}
 
@@ -113,24 +129,39 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAuthModal, onOpenOrderModa
               <NavLink
                 to="/customer/dashboard"
                 className={({ isActive }) =>
-                  `font-serif text-sm font-semibold tracking-wider transition-colors flex items-center gap-1.5 py-1 ${
-                    isActive ? 'text-[#7B211F] font-bold' : 'text-[#553322] hover:text-[#7B211F]'
+                  `relative px-3.5 py-1.5 rounded-full font-serif text-sm font-semibold tracking-wider transition-all duration-300 transform hover:-translate-y-0.5 group/nav flex items-center gap-1.5 ${
+                    isActive
+                      ? 'text-[#7B211F] font-bold bg-[#F8E7CB]/80 shadow-sm'
+                      : 'text-[#553322] hover:text-[#7B211F] hover:bg-[#F8E7CB]/50'
                   }`
                 }
               >
-                <ShoppingBag className="w-4 h-4 text-[#C69A45]" />
-                <span>My Orders</span>
+                {({ isActive }) => (
+                  <>
+                    <ShoppingBag className="w-4 h-4 text-[#C69A45] group-hover/nav:scale-110 transition-transform duration-200" />
+                    <span className="relative z-10 transition-transform duration-200 group-hover/nav:scale-105 inline-block">
+                      My Orders
+                    </span>
+                    <span
+                      className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-[2.5px] bg-gradient-to-r from-[#C69A45] via-[#7B211F] to-[#C69A45] rounded-full transition-all duration-300 ${
+                        isActive
+                          ? 'w-4/5 opacity-100'
+                          : 'w-0 opacity-0 group-hover/nav:w-4/5 group-hover/nav:opacity-100'
+                      }`}
+                    />
+                  </>
+                )}
               </NavLink>
             )}
           </nav>
 
-          {/* Desktop Right Actions: Order Button & Auth Status */}
-          <div className="hidden md:flex items-center gap-3">
+          {/* RIGHT: Order Button & Auth Status */}
+          <div className="hidden md:flex items-center gap-3 flex-shrink-0">
             <button
               onClick={onOpenOrderModal}
-              className="px-5 py-2.5 rounded-full bg-gradient-to-r from-[#7B211F] to-[#9B302A] text-[#FFF3DD] font-serif font-bold text-xs uppercase tracking-wider shadow-md hover:shadow-lg hover:scale-105 transition-all flex items-center gap-2 border border-[#C69A45]/40"
+              className="px-5 py-2.5 rounded-full bg-gradient-to-r from-[#7B211F] to-[#9B302A] text-[#FFF3DD] font-serif font-bold text-xs uppercase tracking-wider shadow-md hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-300 flex items-center gap-2 border border-[#C69A45]/40 group/btn"
             >
-              <Sparkles className="w-3.5 h-3.5 text-[#FFE082]" />
+              <Sparkles className="w-3.5 h-3.5 text-[#FFE082] group-hover/btn:rotate-180 transition-transform duration-500" />
               <span>Order Poornalu</span>
             </button>
 
@@ -269,3 +300,4 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAuthModal, onOpenOrderModa
     </header>
   );
 };
+

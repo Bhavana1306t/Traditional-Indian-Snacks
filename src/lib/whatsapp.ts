@@ -36,3 +36,4 @@ export function openDirectWhatsApp(customText = 'Hello Lakshmipathi Raju garu, I
   const encoded = encodeURIComponent(customText);
   return `https://wa.me/${BUSINESS_CONFIG.rawWhatsapp}?text=${encoded}`;
 }
+

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { Product, Order, DeliveryType } from '../../lib/types';
 import { getProducts, createOrder } from '../../lib/api';
@@ -18,7 +19,8 @@ import {
   CheckCircle2,
   Truck,
   Store,
-  FileText
+  FileText,
+  Home
 } from 'lucide-react';
 
 interface OrderBookingModalProps {
@@ -32,6 +34,7 @@ export const OrderBookingModal: React.FC<OrderBookingModalProps> = ({
   onClose,
   onOrderCreated,
 }) => {
+  const navigate = useNavigate();
   const { profile, user } = useAuth();
 
   const [product, setProduct] = useState<Product | null>(null);
@@ -151,14 +154,29 @@ export const OrderBookingModal: React.FC<OrderBookingModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
       <div className="relative w-full max-w-xl my-8 rounded-3xl bg-[#FFF3DD] border-2 border-[#C69A45] shadow-2xl p-6 sm:p-8 text-[#553322]">
-        {/* Close Button */}
-        <button
-          onClick={resetAndClose}
-          className="absolute top-4 right-4 p-2 text-[#7B211F] hover:bg-[#F8E7CB] rounded-full transition-colors"
-          aria-label="Close"
-        >
-          <X className="w-5 h-5" />
-        </button>
+        {/* Top Header Bar with Home Return Button and Close Button */}
+        <div className="flex items-center justify-between pb-3 border-b border-[#C69A45]/30 mb-4">
+          <button
+            type="button"
+            onClick={() => {
+              resetAndClose();
+              navigate('/');
+            }}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#F8E7CB] hover:bg-[#EDD4AE] text-[#7B211F] text-xs font-serif font-bold border border-[#C69A45]/50 shadow-sm hover:scale-105 active:scale-95 transition-all duration-200 group/home"
+            title="Return to Home Page"
+          >
+            <Home className="w-3.5 h-3.5 text-[#7B211F] group-hover/home:-translate-x-0.5 transition-transform" />
+            <span>← Back to Home</span>
+          </button>
+
+          <button
+            onClick={resetAndClose}
+            className="p-1.5 text-[#7B211F] hover:bg-[#F8E7CB] rounded-full transition-colors"
+            aria-label="Close"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
 
         {/* ORDER SUCCESS SCREEN */}
         {createdOrder ? (
@@ -227,12 +245,27 @@ export const OrderBookingModal: React.FC<OrderBookingModalProps> = ({
                 <span>Send Order Summary to WhatsApp (+91 9948016716)</span>
               </button>
 
-              <button
-                onClick={resetAndClose}
-                className="w-full py-2.5 px-4 rounded-xl bg-transparent hover:bg-[#F8E7CB] text-[#7B211F] font-serif font-semibold text-xs transition-colors"
-              >
-                Done & View in My Orders
-              </button>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                <button
+                  type="button"
+                  onClick={() => {
+                    resetAndClose();
+                    navigate('/');
+                  }}
+                  className="w-full py-2.5 px-4 rounded-xl bg-[#7B211F] hover:bg-[#5A1715] text-[#FFF3DD] font-serif font-semibold text-xs transition-colors flex items-center justify-center gap-1.5 shadow-sm"
+                >
+                  <Home className="w-3.5 h-3.5 text-[#FFE082]" />
+                  <span>Return to Home Page</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={resetAndClose}
+                  className="w-full py-2.5 px-4 rounded-xl bg-[#F8E7CB] hover:bg-[#EDD4AE] text-[#7B211F] font-serif font-semibold text-xs transition-colors"
+                >
+                  Done & View in My Orders
+                </button>
+              </div>
             </div>
           </div>
         ) : (
@@ -462,3 +495,4 @@ export const OrderBookingModal: React.FC<OrderBookingModalProps> = ({
     </div>
   );
 };
+

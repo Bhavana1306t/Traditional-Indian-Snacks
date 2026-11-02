@@ -257,3 +257,4 @@ FROM auth.users
 WHERE email = 'Admin@gmail.com'
 ON CONFLICT (user_id, role) DO NOTHING;
 */
+

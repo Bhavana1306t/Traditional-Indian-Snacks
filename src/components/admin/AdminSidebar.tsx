@@ -114,3 +114,4 @@ export const AdminSidebar: React.FC<{ isOpen?: boolean; onClose?: () => void }> 
     </aside>
   );
 };
+

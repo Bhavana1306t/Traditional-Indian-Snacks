@@ -59,3 +59,4 @@ export const DecorativeLotus: React.FC<LotusProps> = ({
     </svg>
   );
 };
+

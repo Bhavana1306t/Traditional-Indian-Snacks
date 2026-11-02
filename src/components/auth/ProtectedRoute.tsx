@@ -41,3 +41,4 @@ export const AdminProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ c
 
   return <>{children}</>;
 };
+
