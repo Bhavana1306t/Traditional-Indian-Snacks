@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
@@ -97,7 +96,8 @@ export const CustomerDashboardPage: React.FC<CustomerDashboardProps> = ({
   ).length;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8 bg-[#FFF3DD] text-[#553322]">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-3 sm:pt-6 lg:pt-10 pb-10 space-y-8 bg-[#FFF3DD] text-[#553322]">
+
       {/* Back to Home Page Navigation Bar */}
       <div className="flex items-center justify-between">
         <Link

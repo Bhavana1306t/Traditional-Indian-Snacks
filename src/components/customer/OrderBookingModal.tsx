@@ -49,7 +49,6 @@ export const OrderBookingModal: React.FC<OrderBookingModalProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [createdOrder, setCreatedOrder] = useState<Order | null>(null);
 
-  // Set default preferred date to tomorrow
   useEffect(() => {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
@@ -59,10 +58,11 @@ export const OrderBookingModal: React.FC<OrderBookingModalProps> = ({
       setDeliveryAddress(profile.address);
     }
 
-    // Fetch active product
-    getProducts().then((prods) => {
-      if (prods.length > 0) setProduct(prods[0]);
-    });
+    getProducts()
+      .then((prods) => {
+        if (prods.length > 0) setProduct(prods[0]);
+      })
+      .catch((err) => console.error('Failed to load products:', err));
   }, [profile]);
 
   if (!isOpen) return null;
@@ -71,7 +71,12 @@ export const OrderBookingModal: React.FC<OrderBookingModalProps> = ({
   const isPriceSet = unitPrice > 0;
   const totalAmount = isPriceSet ? unitPrice * quantity : 0;
 
-  // Submit order
+  const resetAndClose = () => {
+    setCreatedOrder(null);
+    setError(null);
+    onClose();
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -119,7 +124,6 @@ export const OrderBookingModal: React.FC<OrderBookingModalProps> = ({
         payment_status: 'Unpaid',
       });
 
-      // Celebration effect
       try {
         confetti({
           particleCount: 80,
@@ -141,12 +145,6 @@ export const OrderBookingModal: React.FC<OrderBookingModalProps> = ({
     }
   };
 
-  const resetAndClose = () => {
-    setCreatedOrder(null);
-    setError(null);
-    onClose();
-  };
-
   const handleOpenWhatsApp = () => {
     if (!createdOrder || !profile) return;
 
@@ -157,25 +155,26 @@ export const OrderBookingModal: React.FC<OrderBookingModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
-      <div className="relative w-full max-w-xl my-8 rounded-3xl bg-[#FFF3DD] border-2 border-[#C69A45] shadow-2xl p-6 sm:p-8 text-[#553322]">
+    <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center p-2 sm:p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
+      <div className="relative w-full max-w-xl max-h-[calc(100dvh-1rem)] overflow-y-auto overscroll-contain my-auto rounded-3xl bg-[#FFF3DD] border-2 border-[#C69A45] shadow-2xl p-3 sm:p-8 text-[#553322]">
 
-        {/* Top Header Bar */}
-        <div className="flex items-center justify-between pb-3 border-b border-[#C69A45]/30 mb-4">
+        {/* Sticky Header */}
+        <div className="sticky top-0 z-20 -mx-3 -mt-3 px-3 pt-2 sm:-mx-8 sm:-mt-8 sm:px-8 sm:pt-8 pb-2 mb-3 sm:pb-3 sm:mb-4 bg-[#FFF3DD] border-b border-[#C69A45]/30 flex items-center justify-between">
           <button
             type="button"
             onClick={() => {
               resetAndClose();
               navigate('/');
             }}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#F8E7CB] hover:bg-[#EDD4AE] text-[#7B211F] text-xs font-serif font-bold border border-[#C69A45]/50 shadow-sm hover:scale-105 active:scale-95 transition-all duration-200 group/home"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#F8E7CB] hover:bg-[#EDD4AE] text-[#7B211F] text-xs font-serif font-bold border border-[#C69A45]/50 shadow-sm hover:scale-105 active:scale-95 transition-all duration-200"
             title="Return to Home Page"
           >
-            <Home className="w-3.5 h-3.5 text-[#7B211F] group-hover/home:-translate-x-0.5 transition-transform" />
+            <Home className="w-3.5 h-3.5" />
             <span>← Back to Home</span>
           </button>
 
           <button
+            type="button"
             onClick={resetAndClose}
             className="p-1.5 text-[#7B211F] hover:bg-[#F8E7CB] rounded-full transition-colors"
             aria-label="Close"
@@ -187,7 +186,6 @@ export const OrderBookingModal: React.FC<OrderBookingModalProps> = ({
         {/* ORDER SUCCESS SCREEN */}
         {createdOrder ? (
           <div className="text-center py-4 space-y-5">
-
             <div className="w-16 h-16 mx-auto rounded-full bg-emerald-100 border-2 border-emerald-400 flex items-center justify-center text-emerald-700">
               <CheckCircle2 className="w-10 h-10" />
             </div>
@@ -206,9 +204,7 @@ export const OrderBookingModal: React.FC<OrderBookingModalProps> = ({
               </p>
             </div>
 
-            {/* Order Card Summary */}
             <div className="bg-[#F8E7CB]/80 p-4 rounded-2xl border border-[#C69A45]/40 text-left text-xs sm:text-sm space-y-2">
-
               <div className="flex justify-between border-b border-[#C69A45]/20 pb-2">
                 <span className="text-[#553322]/70">Product:</span>
                 <span className="font-semibold text-[#7B211F]">
@@ -218,9 +214,7 @@ export const OrderBookingModal: React.FC<OrderBookingModalProps> = ({
 
               <div className="flex justify-between border-b border-[#C69A45]/20 pb-2">
                 <span className="text-[#553322]/70">Quantity:</span>
-                <span className="font-semibold">
-                  {createdOrder.quantity} Box(es)
-                </span>
+                <span className="font-semibold">{createdOrder.quantity} Box(es)</span>
               </div>
 
               <div className="flex justify-between border-b border-[#C69A45]/20 pb-2">
@@ -247,7 +241,6 @@ export const OrderBookingModal: React.FC<OrderBookingModalProps> = ({
               </div>
             </div>
 
-            {/* Payment Notice */}
             <div className="p-3 bg-amber-50 rounded-xl border border-amber-300 text-left text-xs text-amber-900">
               <p className="font-semibold">Notice Regarding Payment:</p>
               <p className="text-[11px] text-amber-800 mt-0.5">
@@ -255,9 +248,9 @@ export const OrderBookingModal: React.FC<OrderBookingModalProps> = ({
               </p>
             </div>
 
-            {/* WhatsApp Action */}
             <div className="space-y-3 pt-2">
               <button
+                type="button"
                 onClick={handleOpenWhatsApp}
                 className="w-full py-3.5 px-4 rounded-xl bg-[#25D366] hover:bg-[#20BA5A] text-white font-serif font-bold text-sm tracking-wide shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2"
               >
@@ -266,7 +259,6 @@ export const OrderBookingModal: React.FC<OrderBookingModalProps> = ({
               </button>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
-
                 <button
                   type="button"
                   onClick={() => {
@@ -289,35 +281,13 @@ export const OrderBookingModal: React.FC<OrderBookingModalProps> = ({
                 >
                   Done & View in My Orders
                 </button>
-
               </div>
             </div>
           </div>
         ) : (
-
           /* ORDER FORM */
           <form onSubmit={handleSubmit} className="space-y-4">
 
-            {/* Back to Home */}
-            <div className="flex items-center justify-between pb-2 border-b border-[#C69A45]/20">
-              <button
-                type="button"
-                onClick={() => {
-                  onClose();
-                  navigate('/');
-                }}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#7B211F] hover:bg-[#5A1715] text-[#FFF3DD] text-xs font-bold shadow hover:scale-105 transition-all duration-200"
-              >
-                <Home className="w-3.5 h-3.5 text-[#FFE082]" />
-                <span>← Back to Home</span>
-              </button>
-
-              <span className="text-[10px] text-[#553322]/60 font-serif italic">
-                Secure Order Form
-              </span>
-            </div>
-
-            {/* Header */}
             <div className="text-center mb-4">
               <div className="inline-flex p-2.5 rounded-full bg-[#7B211F]/10 border border-[#C69A45]/40 mb-2">
                 <DecorativeLotus size={28} color="#7B211F" />
@@ -339,40 +309,30 @@ export const OrderBookingModal: React.FC<OrderBookingModalProps> = ({
               </div>
             )}
 
-            {/* Customer Profile Details - Email Authentication */}
+            {/* Customer Details */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-[#F8E7CB]/60 p-3 rounded-2xl border border-[#C69A45]/30 text-xs">
-
               <div>
-                <span className="text-[#553322]/70 block font-medium">
-                  Customer Name:
-                </span>
-
+                <span className="text-[#553322]/70 block font-medium">Customer Name:</span>
                 <span className="font-bold text-[#7B211F] text-sm">
                   {profile?.full_name || 'Guest User'}
                 </span>
               </div>
 
               <div>
-                <span className="text-[#553322]/70 block font-medium">
-                  Email Address:
-                </span>
-
+                <span className="text-[#553322]/70 block font-medium">Email Address:</span>
                 <span className="font-bold text-[#7B211F] text-sm break-all">
                   {user?.email || 'Not available'}
                 </span>
               </div>
-
             </div>
 
-            {/* Product & Quantity Selector */}
+            {/* Product and Quantity */}
             <div className="bg-white/80 p-3.5 rounded-2xl border border-[#C69A45]/40 space-y-3">
-
               <div className="flex items-center justify-between">
                 <div>
                   <h4 className="font-serif font-bold text-sm text-[#7B211F]">
                     {BUSINESS_CONFIG.productName}
                   </h4>
-
                   <p className="text-[11px] text-[#553322]/70">
                     {product?.unit || 'Box of 10 pcs'} • Crisp & Sweet
                   </p>
@@ -382,18 +342,14 @@ export const OrderBookingModal: React.FC<OrderBookingModalProps> = ({
                   <span className="font-serif font-bold text-sm text-[#7B211F]">
                     {isPriceSet ? `₹${unitPrice} / box` : 'Contact us for price'}
                   </span>
-
                   <p className="text-[10px] text-[#553322]/60">
                     {isPriceSet ? 'Configured Price' : 'Awaiting admin pricing'}
                   </p>
                 </div>
               </div>
 
-              {/* Quantity Counter */}
               <div className="flex items-center justify-between pt-2 border-t border-[#C69A45]/20">
-                <span className="text-xs font-semibold text-[#553322]">
-                  Quantity (Boxes):
-                </span>
+                <span className="text-xs font-semibold text-[#553322]">Quantity (Boxes):</span>
 
                 <div className="flex items-center gap-2">
                   <button
@@ -419,24 +375,21 @@ export const OrderBookingModal: React.FC<OrderBookingModalProps> = ({
                 </div>
               </div>
 
-              {/* Total Calculation */}
               <div className="flex justify-between items-center pt-2 text-xs font-bold text-[#7B211F]">
                 <span>Estimated Total:</span>
-
                 <span>
                   {isPriceSet ? `₹${totalAmount.toFixed(2)}` : 'Contact us for price'}
                 </span>
               </div>
             </div>
 
-            {/* Delivery Type */}
+            {/* Fulfillment Option */}
             <div>
               <label className="block text-xs font-semibold text-[#7B211F] mb-1 uppercase tracking-wider">
                 Fulfillment Option
               </label>
 
               <div className="grid grid-cols-2 gap-3">
-
                 <button
                   type="button"
                   onClick={() => setDeliveryType('delivery')}
@@ -462,7 +415,6 @@ export const OrderBookingModal: React.FC<OrderBookingModalProps> = ({
                   <Store className="w-4 h-4" />
                   <span>Self Pickup</span>
                 </button>
-
               </div>
             </div>
 
@@ -475,7 +427,6 @@ export const OrderBookingModal: React.FC<OrderBookingModalProps> = ({
 
                 <div className="relative">
                   <MapPin className="absolute left-3 top-3 w-4 h-4 text-[#C69A45]" />
-
                   <textarea
                     required
                     rows={2}
@@ -488,9 +439,8 @@ export const OrderBookingModal: React.FC<OrderBookingModalProps> = ({
               </div>
             )}
 
-            {/* Date and Time Selector */}
+            {/* Date and Time */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-
               <div>
                 <label className="block text-xs font-semibold text-[#7B211F] mb-1 uppercase tracking-wider">
                   Preferred Date *
@@ -498,7 +448,6 @@ export const OrderBookingModal: React.FC<OrderBookingModalProps> = ({
 
                 <div className="relative">
                   <Calendar className="absolute left-3 top-2.5 w-4 h-4 text-[#C69A45]" />
-
                   <input
                     type="date"
                     required
@@ -517,7 +466,6 @@ export const OrderBookingModal: React.FC<OrderBookingModalProps> = ({
 
                 <div className="relative">
                   <Clock className="absolute left-3 top-2.5 w-4 h-4 text-[#C69A45]" />
-
                   <select
                     value={preferredTime}
                     onChange={(e) => setPreferredTime(e.target.value)}
@@ -526,21 +474,18 @@ export const OrderBookingModal: React.FC<OrderBookingModalProps> = ({
                     <option value="Morning (9:00 AM - 1:00 PM)">
                       Morning (9:00 AM - 1:00 PM)
                     </option>
-
                     <option value="Afternoon (1:00 PM - 5:00 PM)">
                       Afternoon (1:00 PM - 5:00 PM)
                     </option>
-
                     <option value="Evening (5:00 PM - 8:30 PM)">
                       Evening (5:00 PM - 8:30 PM)
                     </option>
                   </select>
                 </div>
               </div>
-
             </div>
 
-            {/* Additional Instructions */}
+            {/* Special Instructions */}
             <div>
               <label className="block text-xs font-semibold text-[#7B211F] mb-1 uppercase tracking-wider">
                 Special Instructions (Optional)
@@ -548,7 +493,6 @@ export const OrderBookingModal: React.FC<OrderBookingModalProps> = ({
 
               <div className="relative">
                 <FileText className="absolute left-3 top-2.5 w-4 h-4 text-[#C69A45]" />
-
                 <input
                   type="text"
                   placeholder="e.g. Festival gift packaging, extra crispy crust, etc."
@@ -579,10 +523,8 @@ export const OrderBookingModal: React.FC<OrderBookingModalProps> = ({
                 </>
               )}
             </button>
-
           </form>
         )}
-
       </div>
     </div>
   );
