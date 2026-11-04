@@ -228,7 +228,7 @@ export const AdminOrdersPage: React.FC = () => {
                         className="px-3 py-1.5 rounded-lg bg-[#7B211F] hover:bg-[#5A1715] text-[#FFF3DD] text-xs font-semibold transition inline-flex items-center gap-1 shadow-sm"
                       >
                         <Eye className="w-3 h-3" />
-                        <span>Inspect / Update</span>
+                        <span>Update</span>
                       </button>
                     </td>
                   </tr>

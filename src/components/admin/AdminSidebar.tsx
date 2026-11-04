@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
@@ -8,17 +9,15 @@ import {
   ShoppingBag,
   Users,
   Tag,
-  Settings,
   LogOut,
   ExternalLink,
   ShieldCheck,
-  Flame
 } from 'lucide-react';
 
-export const AdminSidebar: React.FC<{ isOpen?: boolean; onClose?: () => void }> = ({
-  isOpen = true,
-  onClose,
-}) => {
+export const AdminSidebar: React.FC<{
+  isOpen?: boolean;
+  onClose?: () => void;
+}> = ({ isOpen = true, onClose }) => {
   const { logout, profile } = useAuth();
   const navigate = useNavigate();
 
@@ -32,7 +31,6 @@ export const AdminSidebar: React.FC<{ isOpen?: boolean; onClose?: () => void }> 
     { to: '/admin/orders', label: 'Orders Management', icon: ShoppingBag },
     { to: '/admin/customers', label: 'Customers', icon: Users },
     { to: '/admin/products', label: 'Products & Pricing', icon: Tag },
-    { to: '/admin/settings', label: 'Settings & Security', icon: Settings },
   ];
 
   return (
@@ -48,10 +46,12 @@ export const AdminSidebar: React.FC<{ isOpen?: boolean; onClose?: () => void }> 
             <div className="p-2 rounded-xl bg-[#7B211F] border border-[#C69A45]/50">
               <DecorativeLotus size={24} color="#C69A45" />
             </div>
+
             <div>
               <h2 className="font-serif font-bold text-sm tracking-wide text-[#FFF3DD]">
                 {BUSINESS_CONFIG.name}
               </h2>
+
               <span className="text-[10px] font-mono uppercase tracking-wider text-[#C69A45] flex items-center gap-1">
                 <ShieldCheck className="w-3 h-3 text-[#C69A45]" />
                 Admin Portal
@@ -60,8 +60,12 @@ export const AdminSidebar: React.FC<{ isOpen?: boolean; onClose?: () => void }> 
           </div>
 
           <div className="mt-4 pt-3 border-t border-[#C69A45]/20 text-xs text-[#F8E7CB]/80">
-            <p className="font-medium truncate">{profile?.full_name || 'Lakshmipathi Raju'}</p>
-            <p className="text-[10px] text-[#C69A45]">{BUSINESS_CONFIG.email}</p>
+            <p className="font-medium truncate">
+              {profile?.full_name || 'Lakshmipathi Raju'}
+            </p>
+            <p className="text-[10px] text-[#C69A45]">
+              {BUSINESS_CONFIG.email}
+            </p>
           </div>
         </div>
 
@@ -69,6 +73,7 @@ export const AdminSidebar: React.FC<{ isOpen?: boolean; onClose?: () => void }> 
         <nav className="p-4 space-y-1.5">
           {navItems.map((item) => {
             const Icon = item.icon;
+
             return (
               <NavLink
                 key={item.to}
@@ -114,4 +119,3 @@ export const AdminSidebar: React.FC<{ isOpen?: boolean; onClose?: () => void }> 
     </aside>
   );
 };
-

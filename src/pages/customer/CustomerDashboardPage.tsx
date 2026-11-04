@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from 'react';
+
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Order, OrderStatus } from '../../lib/types';
+import { Order } from '../../lib/types';
 import { getOrders } from '../../lib/api';
 import { BUSINESS_CONFIG } from '../../lib/constants';
-import { OrderStatusBadge, PaymentStatusBadge } from '../../components/common/StatusBadge';
+import {
+  OrderStatusBadge,
+  PaymentStatusBadge,
+} from '../../components/common/StatusBadge';
 import { OrderTimeline } from '../../components/customer/OrderTimeline';
 import { ProfileEditor } from '../../components/customer/ProfileEditor';
 import { DecorativeLotus } from '../../components/common/DecorativeLotus';
@@ -17,26 +21,31 @@ import {
   Phone,
   MessageCircle,
   LogOut,
-  User,
-  ShieldCheck,
   ChevronRight,
   RefreshCw,
   Eye,
   Store,
   Truck,
-  Home
+  Home,
 } from 'lucide-react';
 
 interface CustomerDashboardProps {
   onOpenOrderModal: () => void;
 }
 
-export const CustomerDashboardPage: React.FC<CustomerDashboardProps> = ({ onOpenOrderModal }) => {
+export const CustomerDashboardPage: React.FC<CustomerDashboardProps> = ({
+  onOpenOrderModal,
+}) => {
   const { profile, user, logout } = useAuth();
+
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedOrderForTracking, setSelectedOrderForTracking] = useState<Order | null>(null);
+  const [selectedOrderForTracking, setSelectedOrderForTracking] =
+    useState<Order | null>(null);
   const [activeTab, setActiveTab] = useState<'orders' | 'profile'>('orders');
+
+  // Reference to the tracking section
+  const trackingSectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     loadCustomerOrders();
@@ -44,13 +53,24 @@ export const CustomerDashboardPage: React.FC<CustomerDashboardProps> = ({ onOpen
 
   const loadCustomerOrders = async () => {
     if (!profile?.id && !user?.id) return;
+
     setIsLoading(true);
+
     try {
       const targetId = profile?.id || user?.id;
       const data = await getOrders(targetId);
+
       setOrders(data);
-      if (data.length > 0 && !selectedOrderForTracking) {
-        setSelectedOrderForTracking(data[0]); // default to latest order for quick tracking view
+
+      if (data.length > 0) {
+        setSelectedOrderForTracking((current) => {
+          if (!current) return data[0];
+
+          // Keep the selected order updated with the latest data
+          return data.find((order) => order.id === current.id) || data[0];
+        });
+      } else {
+        setSelectedOrderForTracking(null);
       }
     } catch (err) {
       console.error('Error fetching customer orders:', err);
@@ -59,7 +79,22 @@ export const CustomerDashboardPage: React.FC<CustomerDashboardProps> = ({ onOpen
     }
   };
 
-  const activeOrdersCount = orders.filter((o) => !['Delivered', 'Cancelled'].includes(o.order_status)).length;
+  // Track button handler
+  const handleTrackOrder = (order: Order) => {
+    setSelectedOrderForTracking(order);
+
+    // Scroll to the tracking timeline
+    requestAnimationFrame(() => {
+      trackingSectionRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    });
+  };
+
+  const activeOrdersCount = orders.filter(
+    (o) => !['Delivered', 'Cancelled'].includes(o.order_status)
+  ).length;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8 bg-[#FFF3DD] text-[#553322]">
@@ -85,16 +120,21 @@ export const CustomerDashboardPage: React.FC<CustomerDashboardProps> = ({ onOpen
           <div className="p-3 rounded-2xl bg-[#5A1715] border border-[#C69A45]/50 shadow-md">
             <DecorativeLotus size={36} color="#C69A45" />
           </div>
+
           <div>
             <span className="text-xs uppercase font-serif tracking-widest text-[#C69A45] font-semibold">
               Customer Portal
             </span>
+
             <h1 className="text-2xl sm:text-3xl font-serif font-bold text-[#FFF3DD]">
               Namaskaram, {profile?.full_name || 'Valued Customer'}!
             </h1>
+
             <p className="text-xs text-[#F8E7CB]/80 mt-1 flex items-center gap-2">
               <Phone className="w-3.5 h-3.5 text-[#C69A45]" />
-              <span>Verified Account: <strong>{profile?.phone}</strong></span>
+              <span>
+                Verified Account: <strong>{profile?.phone}</strong>
+              </span>
             </p>
           </div>
         </div>
@@ -136,7 +176,9 @@ export const CustomerDashboardPage: React.FC<CustomerDashboardProps> = ({ onOpen
             <span className="text-xs font-serif uppercase tracking-wider text-[#553322]/70 font-semibold">
               Total Orders Placed
             </span>
-            <p className="text-2xl font-serif font-bold text-[#7B211F] mt-1">{orders.length}</p>
+            <p className="text-2xl font-serif font-bold text-[#7B211F] mt-1">
+              {orders.length}
+            </p>
           </div>
           <ShoppingBag className="w-8 h-8 text-[#C69A45]" />
         </div>
@@ -146,7 +188,9 @@ export const CustomerDashboardPage: React.FC<CustomerDashboardProps> = ({ onOpen
             <span className="text-xs font-serif uppercase tracking-wider text-[#553322]/70 font-semibold">
               Active Orders
             </span>
-            <p className="text-2xl font-serif font-bold text-emerald-800 mt-1">{activeOrdersCount}</p>
+            <p className="text-2xl font-serif font-bold text-emerald-800 mt-1">
+              {activeOrdersCount}
+            </p>
           </div>
           <Clock className="w-8 h-8 text-emerald-600" />
         </div>
@@ -196,16 +240,18 @@ export const CustomerDashboardPage: React.FC<CustomerDashboardProps> = ({ onOpen
         <div className="space-y-8">
           {/* Selected Order Live Tracking Component */}
           {selectedOrderForTracking && (
-            <div>
+            <div ref={trackingSectionRef}>
               <div className="flex items-center justify-between mb-3">
                 <h3 className="font-serif font-bold text-lg text-[#7B211F] flex items-center gap-2">
                   <DecorativeLotus size={20} color="#7B211F" />
                   <span>Selected Order Real-time Progress</span>
                 </h3>
+
                 <span className="text-xs text-[#553322]/70">
                   Tracking Order #{selectedOrderForTracking.order_number}
                 </span>
               </div>
+
               <OrderTimeline
                 order={selectedOrderForTracking}
                 onRefresh={loadCustomerOrders}
@@ -220,6 +266,7 @@ export const CustomerDashboardPage: React.FC<CustomerDashboardProps> = ({ onOpen
                 <h3 className="text-xl font-serif font-bold text-[#7B211F]">
                   My Order History
                 </h3>
+
                 <p className="text-xs text-[#553322]/70">
                   Detailed view of all your Andhra Poornalu bookings
                 </p>
@@ -229,20 +276,34 @@ export const CustomerDashboardPage: React.FC<CustomerDashboardProps> = ({ onOpen
                 onClick={loadCustomerOrders}
                 className="p-2 rounded-xl hover:bg-[#F8E7CB] text-[#7B211F] transition flex items-center gap-1.5 text-xs font-semibold"
               >
-                <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} />
+                <RefreshCw
+                  className={`w-3.5 h-3.5 ${
+                    isLoading ? 'animate-spin' : ''
+                  }`}
+                />
                 <span>Refresh</span>
               </button>
             </div>
 
-            {orders.length === 0 ? (
+            {isLoading ? (
+              <div className="text-center py-10 text-[#7B211F]">
+                Loading your orders...
+              </div>
+            ) : orders.length === 0 ? (
               <div className="text-center py-12 space-y-4">
                 <div className="w-16 h-16 mx-auto rounded-full bg-[#F8E7CB] flex items-center justify-center text-[#7B211F]">
                   <ShoppingBag className="w-8 h-8 text-[#C69A45]" />
                 </div>
-                <h4 className="font-serif font-bold text-lg text-[#7B211F]">No Orders Placed Yet</h4>
+
+                <h4 className="font-serif font-bold text-lg text-[#7B211F]">
+                  No Orders Placed Yet
+                </h4>
+
                 <p className="text-xs text-[#553322]/70 max-w-sm mx-auto">
-                  Experience authentic Andhra homemade Poornam Boorelu prepared in pure cow ghee. Book your first batch now!
+                  Experience authentic Andhra homemade Poornam Boorelu prepared
+                  in pure cow ghee. Book your first batch now!
                 </p>
+
                 <button
                   onClick={onOpenOrderModal}
                   className="px-6 py-2.5 rounded-full bg-[#7B211F] text-[#FFF3DD] font-serif font-bold text-xs uppercase tracking-wider shadow-md hover:bg-[#5A1715] transition"
@@ -266,26 +327,39 @@ export const CustomerDashboardPage: React.FC<CustomerDashboardProps> = ({ onOpen
                       <th className="py-3 px-3 text-right">Action</th>
                     </tr>
                   </thead>
+
                   <tbody className="divide-y divide-[#C69A45]/20">
                     {orders.map((order) => {
-                      const isSelected = selectedOrderForTracking?.id === order.id;
+                      const isSelected =
+                        selectedOrderForTracking?.id === order.id;
+
                       return (
                         <tr
                           key={order.id}
                           className={`hover:bg-[#F8E7CB]/50 transition ${
-                            isSelected ? 'bg-[#F8E7CB]/80 font-medium' : ''
+                            isSelected
+                              ? 'bg-[#F8E7CB]/80 font-medium'
+                              : ''
                           }`}
                         >
                           <td className="py-3 px-3 font-mono font-bold text-[#7B211F]">
                             {order.order_number}
                           </td>
+
                           <td className="py-3 px-3">
                             {order.product?.name || BUSINESS_CONFIG.productName}
                           </td>
-                          <td className="py-3 px-3 font-semibold">{order.quantity} Box(es)</td>
-                          <td className="py-3 px-3 text-xs text-[#553322]/80">
-                            {new Date(order.created_at).toLocaleDateString('en-IN')}
+
+                          <td className="py-3 px-3 font-semibold">
+                            {order.quantity} Box(es)
                           </td>
+
+                          <td className="py-3 px-3 text-xs text-[#553322]/80">
+                            {new Date(order.created_at).toLocaleDateString(
+                              'en-IN'
+                            )}
+                          </td>
+
                           <td className="py-3 px-3 capitalize">
                             <span className="inline-flex items-center gap-1 text-xs">
                               {order.delivery_type === 'delivery' ? (
@@ -301,18 +375,31 @@ export const CustomerDashboardPage: React.FC<CustomerDashboardProps> = ({ onOpen
                               )}
                             </span>
                           </td>
+
                           <td className="py-3 px-3 font-bold text-[#7B211F]">
-                            {order.unit_price > 0 ? `₹${order.total_amount.toFixed(2)}` : 'Contact us'}
+                            {order.unit_price > 0
+                              ? `₹${order.total_amount.toFixed(2)}`
+                              : 'Contact us'}
                           </td>
+
                           <td className="py-3 px-3">
-                            <PaymentStatusBadge status={order.payment_status} size="sm" />
+                            <PaymentStatusBadge
+                              status={order.payment_status}
+                              size="sm"
+                            />
                           </td>
+
                           <td className="py-3 px-3">
-                            <OrderStatusBadge status={order.order_status} size="sm" />
+                            <OrderStatusBadge
+                              status={order.order_status}
+                              size="sm"
+                            />
                           </td>
+
                           <td className="py-3 px-3 text-right">
                             <button
-                              onClick={() => setSelectedOrderForTracking(order)}
+                              type="button"
+                              onClick={() => handleTrackOrder(order)}
                               className="px-3 py-1 rounded-lg bg-[#7B211F] hover:bg-[#5A1715] text-[#FFF3DD] text-xs font-semibold transition inline-flex items-center gap-1 shadow-sm"
                             >
                               <Eye className="w-3 h-3" />
@@ -332,4 +419,3 @@ export const CustomerDashboardPage: React.FC<CustomerDashboardProps> = ({ onOpen
     </div>
   );
 };
-

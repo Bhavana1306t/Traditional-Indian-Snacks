@@ -234,7 +234,7 @@ export const AdminDashboardPage: React.FC = () => {
           <p className="text-2xl font-serif font-bold text-yellow-800 mt-2">
             {stats?.readyForPickupOrders ?? 0}
           </p>
-        </div>git check-ignore -v .env node_modules dist
+        </div>
 
         {/* Out for Delivery */}
         <div className="bg-[#FFF3DD] p-4 rounded-2xl border border-indigo-300 shadow-sm">
