@@ -39,9 +39,9 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const closeMobileMenu = () => setMobileMenuOpen(false);
 
+  // About Us removed from both desktop and mobile navigation.
   const navLinks = [
     { to: '/', label: 'Home' },
-    { to: '/about', label: 'About Us' },
     { to: '/our-poornalu', label: 'Our Poornalu' },
     { to: '/contact', label: 'Contact' },
   ];
@@ -90,7 +90,6 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       {/* Main Navbar */}
       <div className="w-full max-w-7xl mx-auto px-3 sm:px-5 lg:px-8">
-
         <div className="flex items-center justify-between min-h-[64px] sm:h-20 gap-2">
 
           {/* Brand */}

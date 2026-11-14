@@ -1,11 +1,10 @@
+
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { BUSINESS_CONFIG } from '../../lib/constants';
 import { DecorativeLotus } from './DecorativeLotus';
-import { openDirectWhatsApp } from '../../lib/whatsapp';
 import {
   Phone,
-  MessageCircle,
   Heart,
   ShieldCheck,
   MapPin,
@@ -68,7 +67,6 @@ export const Footer: React.FC = () => {
             </h4>
 
             <ul className="space-y-2 text-xs text-[#F8E7CB]/80">
-
               <li>
                 <Link
                   to="/our-poornalu"
@@ -89,7 +87,6 @@ export const Footer: React.FC = () => {
                 </Link>
               </li>
 
-              {/* Kitchen & Pickup Counter */}
               <li>
                 <button
                   type="button"
@@ -110,20 +107,19 @@ export const Footer: React.FC = () => {
                   Track Your Sweet Order
                 </Link>
               </li>
-
             </ul>
           </div>
 
-          {/* Contact & WhatsApp */}
+          {/* Contact Information */}
           <div className="space-y-3">
             <h4 className="font-serif font-bold text-sm text-[#C69A45] uppercase tracking-wider border-b border-[#C69A45]/30 pb-1.5">
-              Connect Directly
+              Contact Details
             </h4>
 
             <div className="space-y-2.5 text-xs text-[#F8E7CB]/80">
 
               <p className="flex items-center gap-2">
-                <Phone className="w-4 h-4 text-[#C69A45]" />
+                <Phone className="w-4 h-4 text-[#C69A45] flex-shrink-0" />
 
                 <a
                   href={`tel:${BUSINESS_CONFIG.phone}`}
@@ -134,21 +130,9 @@ export const Footer: React.FC = () => {
               </p>
 
               <p className="flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-[#C69A45]" />
+                <MapPin className="w-4 h-4 text-[#C69A45] flex-shrink-0" />
                 <span>Andhra Pradesh, India</span>
               </p>
-
-              <div className="pt-2">
-                <a
-                  href={openDirectWhatsApp()}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#25D366] hover:bg-[#20BA5A] text-white font-serif font-bold text-xs shadow-md transition"
-                >
-                  <MessageCircle className="w-4 h-4" />
-                  <span>Chat on WhatsApp</span>
-                </a>
-              </div>
 
             </div>
           </div>

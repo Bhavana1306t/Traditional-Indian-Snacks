@@ -15,7 +15,6 @@ import { useAuth } from './context/AuthContext';
 
 // Public Pages
 import { HomePage } from './pages/HomePage';
-import { AboutPage } from './pages/AboutPage';
 import { OurPoornaluPage } from './pages/OurPoornaluPage';
 import { ContactPage } from './pages/ContactPage';
 
@@ -100,14 +99,7 @@ export const App: React.FC = () => {
             }
           />
 
-          <Route
-            path="/about"
-            element={
-              <AboutPage
-                onOpenOrderModal={handleOpenOrderModal}
-              />
-            }
-          />
+          
 
           <Route
             path="/our-poornalu"
